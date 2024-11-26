@@ -10,7 +10,6 @@ import 'open_chat_button_widget.dart';
 AppBar appBarWidget({
   required GameBloc bloc,
   required VoidCallback openChat,
-  required VoidCallback toogleSound,
 }) {
   TextStyle? playerNameTextStyle;
   double? swordsImageSize;
@@ -63,14 +62,6 @@ AppBar appBarWidget({
                     child: Text(
                       state.secondPlayer,
                       style: playerNameTextStyle,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip:
-                        '${state.soundEnable ? 'Desabilitar' : 'Habilitar'} som',
-                    onPressed: toogleSound,
-                    icon: Icon(
-                      state.soundEnable ? Icons.volume_up : Icons.volume_off,
                     ),
                   ),
                 ],

@@ -75,7 +75,6 @@ class _GamePageState extends State<GamePage> {
       appBar: appBarWidget(
         bloc: _bloc,
         openChat: _openChat,
-        toogleSound: () => _bloc.add(ToogleSoundEvent()),
       ),
       drawer: Drawer(
         child: ChatWidget(

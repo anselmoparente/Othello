@@ -18,8 +18,6 @@ class CellDroppedEvent extends GameEvent {
   CellDroppedEvent(this.droppedCell, this.destinationCell);
 }
 
-class ToogleSoundEvent extends GameEvent {}
-
 class SendMessageEvent extends GameEvent {
   final ChatMessageModel message;
 

@@ -19,7 +19,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   ) : super(GameState.initial(myTurn, firstPlayer, secondPlayer)) {
     on<CellTappedEvent>(_onCellTapped);
     on<CellDroppedEvent>(_onCellDropped);
-    on<ToogleSoundEvent>(_onToogleSound);
     on<SendMessageEvent>(_sendMessage);
     on<SocketDataEvent>(_onSocketData);
     on<OpenChatEvent>(_onOpenChat);
@@ -59,10 +58,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _onCellDropped(CellDroppedEvent event, Emitter emit) {
     emit(_makeMovement(event.droppedCell.index, event.destinationCell.index));
-  }
-
-  void _onToogleSound(ToogleSoundEvent event, Emitter emit) {
-    emit(state.copyWith(soundEnable: !state.soundEnable));
   }
 
   void _sendMessage(SendMessageEvent event, Emitter emit) {
