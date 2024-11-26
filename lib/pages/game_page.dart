@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,7 +54,6 @@ class _GamePageState extends State<GamePage> {
     _client = context.read<ClientBase>();
     _streamSubscription = _client.dataStream.listen(_onSocketData);
     _bloc = GameBloc(
-      AudioPlayer(),
       _client,
       widget.myTurn,
       widget.firstPlayer,

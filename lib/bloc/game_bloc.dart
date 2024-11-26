@@ -1,21 +1,17 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:bloc/bloc.dart';
 
 import '../core/client_base.dart';
 import '../core/dto/data_type.dart';
 import '../models/chat_message_model.dart';
 import '../models/destination_model.dart';
-import '../utils/constants.dart';
 import '../utils/utils.dart';
 import 'game_events.dart';
 import 'game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  final AudioPlayer _audioPlayer;
   final ClientBase _client;
 
   GameBloc(
-    this._audioPlayer,
     this._client,
     bool myTurn,
     String firstPlayer,
@@ -33,7 +29,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _onCellTapped(CellTappedEvent event, Emitter emit) {
     if (!state.myTurn || state.gameOver) {
-      _playSoundEffect(Constants.alertSoundPath);
       return;
     }
 
@@ -45,11 +40,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
 
     if (cell.empty) {
-      _playSoundEffect(Constants.alertSoundPath);
       return;
     }
-
-    _playSoundEffect(Constants.tapSoundPath);
 
     int selectIndex = -1;
     List<DestinationModel> destinations = [];
@@ -80,8 +72,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _onSocketData(SocketDataEvent event, Emitter emit) {
     if (event.data.type.equals(DataType.chat)) {
-      _playSoundEffect(Constants.chatSoundPath);
-
       final message = ChatMessageModel(
         text: event.data.message,
         isMine: false,
@@ -134,8 +124,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     int destinationIndex, {
     int? captureIndex,
   }) {
-    _playSoundEffect(Constants.bonusSoundPath);
-
     bool myTurn = true;
 
     // If the capture index is null, it means the movement is mine
@@ -172,11 +160,5 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       firstPlayer: state.firstPlayer,
       secondPlayer: state.secondPlayer,
     );
-  }
-
-  void _playSoundEffect(String path) {
-    if (state.soundEnable) {
-      _audioPlayer.play(AssetSource(path));
-    }
   }
 }
