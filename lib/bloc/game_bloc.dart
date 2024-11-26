@@ -38,7 +38,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       return;
     }
 
-    if (cell.empty) {
+    if (cell.value == null) {
       return;
     }
 
@@ -136,9 +136,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       );
     }
 
-    state.board[sourceIndex] = state.board[sourceIndex].switchEmpty();
-    state.board[destinationIndex] = state.board[destinationIndex].switchEmpty();
-    state.board[captureIndex] = state.board[captureIndex].switchEmpty();
+    ////TODO: Corrigir aqui dps
+    // state.board[sourceIndex] = state.board[sourceIndex].switchEmpty();
+    // state.board[destinationIndex] = state.board[destinationIndex].switchEmpty();
+    // state.board[captureIndex] = state.board[captureIndex].switchEmpty();
 
     bool gameOver = isGameOver(state.board);
 

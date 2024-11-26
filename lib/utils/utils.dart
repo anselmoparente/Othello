@@ -13,15 +13,16 @@ List<DestinationModel> getAvailableDestinations(
   int index,
   List<CellModel> board,
 ) {
-  if (!CellModel.isValid(index) || board[index].empty) return [];
+  ////TODO: Corrigir aqui dps
+  if (!CellModel.isValid(index) || board[index].value == null) return [];
   final answer = <DestinationModel>[];
   for (int i = 0; i < 4; ++i) {
     final destinationIndex = index + deltaDestination[i];
     final enemyIndex = index + deltaEnemy[i];
 
     if (CellModel.isValid(destinationIndex) &&
-        board[destinationIndex].empty &&
-        !board[enemyIndex].empty) {
+        board[destinationIndex].value != null &&
+        board[enemyIndex].value != null) {
       answer.add(
         DestinationModel(
           destination: destinationIndex,

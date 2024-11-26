@@ -26,13 +26,14 @@ class CellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!cell.valid) return const SizedBox.shrink();
+    if (cell.value == null && !cell.valid) {
+      return const SizedBox.shrink();
+    }
 
     final child = Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: Material(
         elevation: _getElevation(),
-        shadowColor: _getBackgroundColor(),
         shape: const CircleBorder(),
         child: InkWell(
           onTap: () => onTap(cell),
@@ -56,12 +57,12 @@ class CellWidget extends StatelessWidget {
       );
     }
 
-    if (_empty || !myTurn || gameOver) return child;
+    if (_value != null || !myTurn || gameOver) return child;
 
     return Draggable<CellModel>(
       data: cell,
       feedback: SizedBox.square(
-        dimension: 54.545454545,
+        dimension: 64.0,
         child: child,
       ),
       childWhenDragging: const Padding(
@@ -80,13 +81,13 @@ class CellWidget extends StatelessWidget {
   }
 
   double _getElevation() {
-    if (_empty) return 0.0;
+    if (_value != null) return 0.0;
     return 12.0;
   }
 
   Color _getBackgroundColor() {
-    if (_empty) return Colors.black;
-    return Colors.red;
+    if (_value != null) return _value == 0 ? Colors.white : Colors.black;
+    return Colors.transparent;
   }
 
   Color _getOverlayColor() {
@@ -99,5 +100,5 @@ class CellWidget extends StatelessWidget {
 
   bool get _selected => cell.index == selectedIndex;
 
-  bool get _empty => cell.empty;
+  int? get _value => cell.value;
 }
