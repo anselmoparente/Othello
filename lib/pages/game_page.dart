@@ -83,13 +83,6 @@ class _GamePageState extends State<GamePage> {
           closeChat: () => _scaffoldKey.currentState?.closeDrawer(),
         ),
       ),
-      floatingActionButton: FloatingActionButtonsWidget(
-        bloc: _bloc,
-        exit: _exit,
-        newGame: _newGame,
-        whiteFlag: _whiteFlag,
-      ),
-      bottomNavigationBar: FooterWidget(bloc: _bloc),
       body: BlocConsumer<GameBloc, GameState>(
         bloc: _bloc,
         listenWhen: _listenToGameStateChangeWhen,
@@ -98,34 +91,49 @@ class _GamePageState extends State<GamePage> {
           return Center(
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(400.0)),
-              child: GridView(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                ),
-                children: List.of(
-                  state.board
-                      .where((e) =>
-                          !CellModel.isAnAuxiliaryHorizontalCell(e.index))
-                      .map(
-                        (cell) => CellWidget(
-                          cell: cell,
-                          selectedIndex: state.selectedIndex,
-                          destinations: state.availableDestinations,
-                          onTap: _onCellTapped,
-                          onCellDropped: _onCellDropped,
-                          myTurn: state.myTurn,
-                          gameOver: state.gameOver,
-                        ),
+              child: Container(
+                color: Colors.black,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 16.0,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 8,
+                    mainAxisSpacing: 4,
+                    crossAxisSpacing: 4,
+                  ),
+                  itemCount: 64,
+                  itemBuilder: (context, index) {
+                    final cell = state.board[index];
+                    return Container(
+                      color: Colors.green,
+                      child: CellWidget(
+                        cell: cell,
+                        selectedIndex: state.selectedIndex,
+                        destinations: state.availableDestinations,
+                        onTap: _onCellTapped,
+                        onCellDropped: _onCellDropped,
+                        myTurn: state.myTurn,
+                        gameOver: state.gameOver,
                       ),
+                    );
+                  },
                 ),
               ),
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButtonsWidget(
+        bloc: _bloc,
+        exit: _exit,
+        newGame: _newGame,
+        whiteFlag: _whiteFlag,
+      ),
+      bottomNavigationBar: FooterWidget(bloc: _bloc),
     );
   }
 
