@@ -38,7 +38,7 @@ class GameState {
     return GameState(
       selectedIndex: -1,
       soundEnable: true,
-      board: List<CellModel>.generate(77, CellModel.initial),
+      board: List<CellModel>.generate(64, CellModel.initial),
       availableDestinations: [],
       messages: [],
       unreadMessagesCount: 0,
