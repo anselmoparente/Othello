@@ -78,7 +78,6 @@ class SocketClientImpl implements ClientBase {
 
   @override
   void startGame() {
-    // randomly select who will make the first move
     final enemyStarts = Random().nextInt(2).isEven;
 
     _sendMessage(

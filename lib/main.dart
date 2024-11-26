@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          scaffoldBackgroundColor: const Color(0xFFDDDDDD),
+          scaffoldBackgroundColor: const Color(0xFFF0D4AB),
           fontFamily: Constants.pressStartFontFamily,
           appBarTheme: const AppBarTheme(
             backgroundColor: Color(0xFFDDDDDD),

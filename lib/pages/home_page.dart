@@ -59,6 +59,7 @@ class _HomePageState extends State<HomePage> {
         hintText: 'IP',
       ),
     );
+
     final portTextField = TextField(
       controller: _enemyPortInput,
       onChanged: _onInputChange,
@@ -71,11 +72,13 @@ class _HomePageState extends State<HomePage> {
         hintText: 'Porta',
       ),
     );
+
     final playButton = ElevatedButtonWidget(
       onPressed: _isValid ? _connect : null,
       text: 'Jogar',
       loading: _connecting,
     );
+
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -85,7 +88,7 @@ class _HomePageState extends State<HomePage> {
               Text('Bem vindo(a), $_userName!'),
               const SizedBox(height: 64.0),
               const Text(
-                'Inicie uma partida conectando-se com um amigo:',
+                'Conecte-se com seu amigo para iniciar a partida:',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16.0),
