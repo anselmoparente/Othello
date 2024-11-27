@@ -63,7 +63,6 @@ class _GamePageState extends State<GamePage> {
       widget.firstPlayer,
       widget.secondPlayer,
     );
-    log('${widget.myUserName} ${widget.myValue}');
     super.initState();
   }
 
@@ -93,6 +92,10 @@ class _GamePageState extends State<GamePage> {
         listenWhen: _listenToGameStateChangeWhen,
         listener: _onGameOver,
         builder: (context, state) {
+          if (state.myTurn) {
+            _bloc.add(FindDestinations(state.myValue, state.board));
+          }
+
           return Center(
             child: ConstrainedBox(
               constraints: BoxConstraints.loose(const Size.fromWidth(400.0)),

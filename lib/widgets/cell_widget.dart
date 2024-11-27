@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:othello/utils/utils.dart';
 
 import '../models/cell_model.dart';
 import '../models/destination_model.dart';
@@ -26,7 +27,7 @@ class CellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (cell.value == null && !cell.valid) {
+    if (cell.value == null && !_isDestination) {
       return const SizedBox.shrink();
     }
 
@@ -43,7 +44,6 @@ class CellWidget extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               CircleWidget(color: _getBackgroundColor()),
-              CircleWidget(color: _getOverlayColor()),
             ],
           ),
         ),
@@ -86,17 +86,16 @@ class CellWidget extends StatelessWidget {
   }
 
   Color _getBackgroundColor() {
-    if (_value != null) return _value == 0 ? Colors.white : Colors.black;
-    return Colors.transparent;
-  }
-
-  Color _getOverlayColor() {
-    if (_isDestination || _selected) return Colors.white.withOpacity(.5);
+    if (_value != null) {
+      return _value == 0 ? Colors.black : Colors.white;
+    } else if (_isDestination) {
+      return Colors.grey.shade400;
+    }
     return Colors.transparent;
   }
 
   bool get _isDestination =>
-      destinations.map((e) => e.destination).contains(cell.index);
+      destinations.any((destination) => destination.destination == cell.index);
 
   bool get _selected => cell.index == selectedIndex;
 

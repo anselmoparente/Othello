@@ -9,6 +9,67 @@ import '../models/destination_model.dart';
 const deltaDestination = [-22, 22, -2, 2];
 const deltaEnemy = [-11, 11, -1, 1];
 
+List<DestinationModel> findValidMoves(int pieceValue, List<CellModel> board) {
+  // Direções para verificar (horizontal, vertical e diagonais)
+  const directions = [
+    -8, 8, // vertical (cima, baixo)
+    -1, 1, // horizontal (esquerda, direita)
+    -9, -7, 7, 9 // diagonais (superiores e inferiores)
+  ];
+
+  List<DestinationModel> validMoves = [];
+
+  for (var cell in board) {
+    // Somente células vazias podem ser consideradas
+    if (cell.value != null) continue;
+
+    bool isValid = false;
+
+    // Verifica todas as direções a partir da célula vazia
+    for (var direction in directions) {
+      int currentIndex = cell.index + direction;
+      bool foundOpponentPiece = false;
+
+      while (_isWithinBounds(cell.index, currentIndex, direction) &&
+          currentIndex >= 0 &&
+          currentIndex < board.length) {
+        var neighbor = board[currentIndex];
+
+        if (neighbor.value == null)
+          break; // Célula vazia, não há captura possível
+        if (neighbor.value == pieceValue) {
+          if (foundOpponentPiece) {
+            isValid =
+                true; // Jogada válida se encontramos peças adversárias antes
+          }
+          break;
+        }
+
+        foundOpponentPiece = true; // Encontrou peça do adversário
+        currentIndex += direction;
+      }
+
+      if (isValid)
+        break; // Se já for válido, não precisa verificar outras direções
+    }
+
+    if (isValid) {
+      validMoves.add(DestinationModel(destination: cell.index));
+    }
+  }
+
+  return validMoves;
+}
+
+/// Verifica se o índice está dentro dos limites do tabuleiro e mantém-se alinhado em termos de colunas.
+bool _isWithinBounds(int startIndex, int currentIndex, int direction) {
+  if (direction == -1 || direction == 1) {
+    // Verifica borda esquerda/direita para movimentos horizontais
+    return (startIndex ~/ 8) == (currentIndex ~/ 8);
+  }
+  return true; // Para movimentos verticais ou diagonais
+}
+
 List<DestinationModel> getAvailableDestinations(
   int index,
   List<CellModel> board,
@@ -26,7 +87,6 @@ List<DestinationModel> getAvailableDestinations(
       answer.add(
         DestinationModel(
           destination: destinationIndex,
-          capture: enemyIndex,
         ),
       );
     }

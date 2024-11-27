@@ -5,6 +5,13 @@ import '../models/chat_message_model.dart';
 
 abstract class GameEvent {}
 
+class FindDestinations extends GameEvent {
+  final int myValue;
+  final List<CellModel> board;
+
+  FindDestinations(this.myValue, this.board);
+}
+
 class CellTappedEvent extends GameEvent {
   final CellModel cell;
 

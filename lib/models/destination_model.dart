@@ -1,6 +1,8 @@
 class DestinationModel {
   final int destination;
-  final int capture;
 
-  DestinationModel({required this.destination, required this.capture});
+  DestinationModel({required this.destination});
+
+  @override
+  String toString() => 'DestinationModel(destination: $destination)';
 }

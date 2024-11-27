@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 
 import '../core/client_base.dart';
@@ -20,6 +22,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   ) : super(GameState.initial(myTurn, myValue, firstPlayer, secondPlayer)) {
     on<CellTappedEvent>(_onCellTapped);
     on<CellDroppedEvent>(_onCellDropped);
+    on<FindDestinations>(_onFindDestinations);
     on<SendMessageEvent>(_sendMessage);
     on<SocketDataEvent>(_onSocketData);
     on<OpenChatEvent>(_onOpenChat);
@@ -34,10 +37,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     final cell = event.cell;
 
-    if (isDestination(state.availableDestinations, cell)) {
-      emit(_makeMovement(state.board[state.selectedIndex].index, cell.index));
-      return;
-    }
+    log(state.board.toString());
+
+    // if (isDestination(state.availableDestinations, cell)) {
+    //   emit(_makeMovement(state.board[state.selectedIndex].index, cell.index));
+    //   return;
+    // }
 
     if (cell.value == null) {
       return;
@@ -59,6 +64,15 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   void _onCellDropped(CellDroppedEvent event, Emitter emit) {
     emit(_makeMovement(event.droppedCell.index, event.destinationCell.index));
+  }
+
+  void _onFindDestinations(FindDestinations event, Emitter emit) {
+    List<DestinationModel> destinations = findValidMoves(
+      state.myValue,
+      state.board,
+    );
+
+    emit(state.copyWith(availableDestinations: destinations));
   }
 
   void _sendMessage(SendMessageEvent event, Emitter emit) {
@@ -122,21 +136,21 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     int? captureIndex,
   }) {
     bool myTurn = true;
-
+    ////TODO: Corrigir aqui dps
     // If the capture index is null, it means the movement is mine
-    if (captureIndex == null) {
-      myTurn = false;
+//     if (captureIndex == null) {
+//       myTurn = false;
 
-      captureIndex = state.availableDestinations
-          .firstWhere((d) => d.destination == destinationIndex)
-          .capture;
-
-      _client.movement(
-        sourceIndex: sourceIndex,
-        captureIndex: captureIndex,
-        destinationIndex: destinationIndex,
-      );
-    }
+//       captureIndex = state.availableDestinations
+//           .firstWhere((d) => d.destination == destinationIndex)
+//           .captu
+// re;
+//       _client.movement(
+//         sourceIndex: sourceIndex,
+//         captureIndex: captureIndex,
+//         destinationIndex: destinationIndex,
+//       );
+//     }
 
     ////TODO: Corrigir aqui dps
     // state.board[sourceIndex] = state.board[sourceIndex].switchEmpty();

@@ -24,7 +24,7 @@ class CellModel {
 
   static bool _isCenter(int index) => [27, 28, 35, 36].contains(index);
 
-  static int _whatColor(int index) => [27, 36].contains(index) ? 0 : 1;
+  static int _whatColor(int index) => [28, 35].contains(index) ? 0 : 1;
 
   @override
   String toString() => 'CellModel(index: $index, valid: $valid, value: $value)';
