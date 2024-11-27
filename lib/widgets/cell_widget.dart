@@ -6,7 +6,7 @@ import 'circle_widget.dart';
 
 class CellWidget extends StatelessWidget {
   const CellWidget({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.cell,
     required this.onTap,
@@ -14,7 +14,7 @@ class CellWidget extends StatelessWidget {
     required this.onCellDropped,
     required this.myTurn,
     required this.gameOver,
-  }) : super(key: key);
+  });
 
   final int selectedIndex;
   final CellModel cell;

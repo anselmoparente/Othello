@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,11 +26,13 @@ class GamePage extends StatefulWidget {
   const GamePage({
     super.key,
     required this.myTurn,
+    required this.myValue,
     required this.firstPlayer,
     required this.secondPlayer,
   });
 
   final bool myTurn;
+  final int myValue;
   final String firstPlayer;
   final String secondPlayer;
 
@@ -56,9 +59,11 @@ class _GamePageState extends State<GamePage> {
     _bloc = GameBloc(
       _client,
       widget.myTurn,
+      widget.myValue,
       widget.firstPlayer,
       widget.secondPlayer,
     );
+    log('${widget.myUserName} ${widget.myValue}');
     super.initState();
   }
 
@@ -265,7 +270,8 @@ class _GamePageState extends State<GamePage> {
       data,
       widget.myUserName,
     );
-    _bloc.add(NewGameEvent(data.start, firstPlayer, secondPlayer));
+    _bloc.add(
+        NewGameEvent(widget.myValue, data.start, firstPlayer, secondPlayer));
   }
 
   void _exit() {

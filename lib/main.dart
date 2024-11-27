@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: const Color(0xFFF0D4AB),
           fontFamily: Constants.pressStartFontFamily,
           appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFFDDDDDD),
+            backgroundColor: Color(0xFFEFBDA7),
             surfaceTintColor: Colors.transparent,
           ),
         ),

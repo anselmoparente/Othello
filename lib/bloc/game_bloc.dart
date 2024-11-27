@@ -14,9 +14,10 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   GameBloc(
     this._client,
     bool myTurn,
+    int myValue,
     String firstPlayer,
     String secondPlayer,
-  ) : super(GameState.initial(myTurn, firstPlayer, secondPlayer)) {
+  ) : super(GameState.initial(myTurn, myValue, firstPlayer, secondPlayer)) {
     on<CellTappedEvent>(_onCellTapped);
     on<CellDroppedEvent>(_onCellDropped);
     on<SendMessageEvent>(_sendMessage);
@@ -105,6 +106,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   void _onNewGame(NewGameEvent event, Emitter emit) {
     emit(GameState.initial(
       event.start,
+      event.myValue,
       event.firstPlayer,
       event.secondPlayer,
     ).copyWith(
@@ -151,6 +153,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       messages: state.messages,
       unreadMessagesCount: state.unreadMessagesCount,
       myTurn: myTurn,
+      myValue: state.myValue,
       gameOver: gameOver,
       whiteFlag: state.whiteFlag,
       firstPlayer: state.firstPlayer,

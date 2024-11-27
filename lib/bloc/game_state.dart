@@ -11,6 +11,7 @@ class GameState {
   final List<ChatMessageModel> messages;
   final int unreadMessagesCount;
   final bool myTurn;
+  final int myValue;
   final bool gameOver;
   final bool? whiteFlag;
   final String firstPlayer;
@@ -24,6 +25,7 @@ class GameState {
     required this.messages,
     required this.unreadMessagesCount,
     required this.myTurn,
+    required this.myValue,
     required this.gameOver,
     required this.whiteFlag,
     required this.firstPlayer,
@@ -32,6 +34,7 @@ class GameState {
 
   factory GameState.initial(
     bool myTurn,
+    int myValue,
     String firstPlayer,
     String secondPlayer,
   ) {
@@ -43,6 +46,7 @@ class GameState {
       messages: [],
       unreadMessagesCount: 0,
       myTurn: myTurn,
+      myValue: myValue,
       gameOver: false,
       whiteFlag: null,
       firstPlayer: firstPlayer,
@@ -58,6 +62,7 @@ class GameState {
     List<ChatMessageModel>? messages,
     int? unreadMessagesCount,
     bool? myTurn,
+    int? myValue,
     bool? gameOver,
     bool? whiteFlag,
     String? firstPlayer,
@@ -72,6 +77,7 @@ class GameState {
       messages: messages ?? this.messages,
       unreadMessagesCount: unreadMessagesCount ?? this.unreadMessagesCount,
       myTurn: myTurn ?? this.myTurn,
+      myValue: myValue ?? this.myValue,
       gameOver: gameOver ?? this.gameOver,
       whiteFlag: whiteFlag,
       firstPlayer: firstPlayer ?? this.firstPlayer,

@@ -200,6 +200,7 @@ class _HomePageState extends State<HomePage> {
 
   void _navigateToGamePage(Dto data) {
     var (firstPlayer, secondPlayer) = getMatchDisplayOrder(data, _userName);
+    int myValue = data.start ? 0 : 1;
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -207,6 +208,7 @@ class _HomePageState extends State<HomePage> {
           firstPlayer: firstPlayer,
           secondPlayer: secondPlayer,
           myTurn: data.start,
+          myValue: myValue,
         ),
       ),
       (route) => false,

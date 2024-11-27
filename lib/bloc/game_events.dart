@@ -39,9 +39,10 @@ class OpenChatEvent extends GameEvent {}
 class WhiteFlagEvent extends GameEvent {}
 
 class NewGameEvent extends GameEvent {
+  final int myValue;
   final bool start;
   final String firstPlayer;
   final String secondPlayer;
 
-  NewGameEvent(this.start, this.firstPlayer, this.secondPlayer);
+  NewGameEvent(this.myValue, this.start, this.firstPlayer, this.secondPlayer);
 }
