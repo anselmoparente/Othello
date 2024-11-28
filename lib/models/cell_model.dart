@@ -1,7 +1,7 @@
 class CellModel {
   final int index;
   final bool valid;
-  final int? value;
+  int? value;
 
   CellModel({
     required this.index,

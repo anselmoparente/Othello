@@ -123,7 +123,6 @@ class _GamePageState extends State<GamePage> {
                         selectedIndex: state.selectedIndex,
                         destinations: state.availableDestinations,
                         onTap: _onCellTapped,
-                        onCellDropped: _onCellDropped,
                         myTurn: state.myTurn,
                         gameOver: state.gameOver,
                       ),
@@ -166,9 +165,6 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _onCellTapped(CellModel cell) => _bloc.add(CellTappedEvent(cell));
-
-  void _onCellDropped(CellModel cell, CellModel destination) =>
-      _bloc.add(CellDroppedEvent(cell, destination));
 
   void _onSocketData(Dto data) {
     if (data.type.equals(DataType.disconnectedPair)) {

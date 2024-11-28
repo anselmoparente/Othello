@@ -18,19 +18,18 @@ abstract class ClientBase {
 
   void startGame();
 
-  void exit();
-
   void accept(Dto dto);
 
   void decline(Dto dto);
+
+  void exit();
 
   void chat(String message);
 
   void whiteFlag();
 
   void movement({
-    required int sourceIndex,
-    required int captureIndex,
+    required int value,
     required int destinationIndex,
   });
 }

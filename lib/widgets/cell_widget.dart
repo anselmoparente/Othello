@@ -12,7 +12,6 @@ class CellWidget extends StatelessWidget {
     required this.cell,
     required this.onTap,
     required this.destinations,
-    required this.onCellDropped,
     required this.myTurn,
     required this.gameOver,
   });
@@ -21,7 +20,6 @@ class CellWidget extends StatelessWidget {
   final CellModel cell;
   final List<DestinationModel> destinations;
   final void Function(CellModel) onTap;
-  final void Function(CellModel, CellModel) onCellDropped;
   final bool myTurn;
   final bool gameOver;
 
@@ -37,7 +35,7 @@ class CellWidget extends StatelessWidget {
         elevation: _getElevation(),
         shape: const CircleBorder(),
         child: InkWell(
-          onTap: () => onTap(cell),
+          onTap: () => _isDestination == true ? onTap(cell) : null,
           customBorder: const CircleBorder(),
           child: Stack(
             fit: StackFit.passthrough,
@@ -49,13 +47,6 @@ class CellWidget extends StatelessWidget {
         ),
       ),
     );
-
-    if (_isDestination) {
-      return DragTarget<CellModel>(
-        onAccept: (droppedCell) => onCellDropped(droppedCell, cell),
-        builder: (context, candidateData, rejectedData) => child,
-      );
-    }
 
     if (_value != null || !myTurn || gameOver) return child;
 

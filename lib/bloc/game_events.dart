@@ -5,6 +5,15 @@ import '../models/chat_message_model.dart';
 
 abstract class GameEvent {}
 
+class NewGameEvent extends GameEvent {
+  final int myValue;
+  final bool start;
+  final String firstPlayer;
+  final String secondPlayer;
+
+  NewGameEvent(this.myValue, this.start, this.firstPlayer, this.secondPlayer);
+}
+
 class FindDestinations extends GameEvent {
   final int myValue;
   final List<CellModel> board;
@@ -18,12 +27,7 @@ class CellTappedEvent extends GameEvent {
   CellTappedEvent(this.cell);
 }
 
-class CellDroppedEvent extends GameEvent {
-  final CellModel droppedCell;
-  final CellModel destinationCell;
-
-  CellDroppedEvent(this.droppedCell, this.destinationCell);
-}
+class OpenChatEvent extends GameEvent {}
 
 class SendMessageEvent extends GameEvent {
   final ChatMessageModel message;
@@ -31,25 +35,11 @@ class SendMessageEvent extends GameEvent {
   SendMessageEvent(this.message);
 }
 
+class WhiteFlagEvent extends GameEvent {}
+
 class SocketDataEvent extends GameEvent {
   final Dto data;
   final bool chatOpen;
 
-  SocketDataEvent({
-    required this.data,
-    required this.chatOpen,
-  });
-}
-
-class OpenChatEvent extends GameEvent {}
-
-class WhiteFlagEvent extends GameEvent {}
-
-class NewGameEvent extends GameEvent {
-  final int myValue;
-  final bool start;
-  final String firstPlayer;
-  final String secondPlayer;
-
-  NewGameEvent(this.myValue, this.start, this.firstPlayer, this.secondPlayer);
+  SocketDataEvent({required this.data, required this.chatOpen});
 }

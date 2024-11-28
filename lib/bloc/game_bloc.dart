@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
+import 'package:othello/models/cell_model.dart';
 
 import '../core/client_base.dart';
 import '../core/dto/data_type.dart';
@@ -20,50 +19,26 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     String firstPlayer,
     String secondPlayer,
   ) : super(GameState.initial(myTurn, myValue, firstPlayer, secondPlayer)) {
-    on<CellTappedEvent>(_onCellTapped);
-    on<CellDroppedEvent>(_onCellDropped);
-    on<FindDestinations>(_onFindDestinations);
-    on<SendMessageEvent>(_sendMessage);
-    on<SocketDataEvent>(_onSocketData);
-    on<OpenChatEvent>(_onOpenChat);
-    on<WhiteFlagEvent>(_onWhiteFlag);
     on<NewGameEvent>(_onNewGame);
+    on<FindDestinations>(_onFindDestinations);
+    on<CellTappedEvent>(_onCellTapped);
+    on<OpenChatEvent>(_onOpenChat);
+    on<SendMessageEvent>(_sendMessage);
+    on<WhiteFlagEvent>(_onWhiteFlag);
+    on<SocketDataEvent>(_onSocketData);
   }
 
-  void _onCellTapped(CellTappedEvent event, Emitter emit) {
-    if (!state.myTurn || state.gameOver) {
-      return;
-    }
-
-    final cell = event.cell;
-
-    log(state.board.toString());
-
-    // if (isDestination(state.availableDestinations, cell)) {
-    //   emit(_makeMovement(state.board[state.selectedIndex].index, cell.index));
-    //   return;
-    // }
-
-    if (cell.value == null) {
-      return;
-    }
-
-    int selectIndex = -1;
-    List<DestinationModel> destinations = [];
-
-    if (cell.index != state.selectedIndex) {
-      selectIndex = cell.index;
-      destinations = getAvailableDestinations(cell.index, state.board);
-    }
-
-    emit(state.copyWith(
-      selectedIndex: selectIndex,
-      availableDestinations: destinations,
+  void _onNewGame(NewGameEvent event, Emitter emit) {
+    emit(GameState.initial(
+      event.start,
+      event.myValue,
+      event.firstPlayer,
+      event.secondPlayer,
+    ).copyWith(
+      messages: state.messages,
+      unreadMessagesCount: state.unreadMessagesCount,
+      soundEnable: state.soundEnable,
     ));
-  }
-
-  void _onCellDropped(CellDroppedEvent event, Emitter emit) {
-    emit(_makeMovement(event.droppedCell.index, event.destinationCell.index));
   }
 
   void _onFindDestinations(FindDestinations event, Emitter emit) {
@@ -75,9 +50,38 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     emit(state.copyWith(availableDestinations: destinations));
   }
 
+  void _onCellTapped(CellTappedEvent event, Emitter emit) {
+    if (!state.myTurn || state.gameOver) {
+      return;
+    }
+
+    final cell = event.cell;
+    List<CellModel> board = state.board;
+    board[cell.index].value = state.myValue;
+
+    board = updateBoardAfterMove(cell.index, state.myValue, board);
+
+    _client.movement(value: state.myValue, destinationIndex: cell.index);
+
+    emit(
+      state.copyWith(board: board, myTurn: false, availableDestinations: []),
+    );
+  }
+
+  void _onOpenChat(OpenChatEvent event, Emitter emit) {
+    if (state.unreadMessagesCount > 0) {
+      emit(state.copyWith(unreadMessagesCount: 0));
+    }
+  }
+
   void _sendMessage(SendMessageEvent event, Emitter emit) {
     _client.chat(event.message.text);
     emit(state.copyWith(messages: state.messages..add(event.message)));
+  }
+
+  void _onWhiteFlag(WhiteFlagEvent event, Emitter emit) {
+    _client.whiteFlag();
+    emit(state.copyWith(gameOver: true, whiteFlag: false));
   }
 
   void _onSocketData(SocketDataEvent event, Emitter emit) {
@@ -95,9 +99,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     if (event.data.type.equals(DataType.movement)) {
       emit(_makeMovement(
-        event.data.sourceIndex,
+        event.data.value,
         event.data.destinationIndex,
-        captureIndex: event.data.captureIndex,
       ));
     }
 
@@ -106,63 +109,18 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
   }
 
-  void _onOpenChat(OpenChatEvent event, Emitter emit) {
-    if (state.unreadMessagesCount > 0) {
-      emit(state.copyWith(unreadMessagesCount: 0));
-    }
-  }
-
-  void _onWhiteFlag(WhiteFlagEvent event, Emitter emit) {
-    _client.whiteFlag();
-    emit(state.copyWith(gameOver: true, whiteFlag: false));
-  }
-
-  void _onNewGame(NewGameEvent event, Emitter emit) {
-    emit(GameState.initial(
-      event.start,
-      event.myValue,
-      event.firstPlayer,
-      event.secondPlayer,
-    ).copyWith(
-      messages: state.messages,
-      unreadMessagesCount: state.unreadMessagesCount,
-      soundEnable: state.soundEnable,
-    ));
-  }
-
-  GameState _makeMovement(
-    int sourceIndex,
-    int destinationIndex, {
-    int? captureIndex,
-  }) {
+  GameState _makeMovement(int value, int destinationIndex) {
     bool myTurn = true;
-    ////TODO: Corrigir aqui dps
-    // If the capture index is null, it means the movement is mine
-//     if (captureIndex == null) {
-//       myTurn = false;
-
-//       captureIndex = state.availableDestinations
-//           .firstWhere((d) => d.destination == destinationIndex)
-//           .captu
-// re;
-//       _client.movement(
-//         sourceIndex: sourceIndex,
-//         captureIndex: captureIndex,
-//         destinationIndex: destinationIndex,
-//       );
-//     }
-
-    ////TODO: Corrigir aqui dps
-    // state.board[sourceIndex] = state.board[sourceIndex].switchEmpty();
-    // state.board[destinationIndex] = state.board[destinationIndex].switchEmpty();
-    // state.board[captureIndex] = state.board[captureIndex].switchEmpty();
 
     bool gameOver = isGameOver(state.board);
+
+    List<CellModel> board = state.board;
+    board[destinationIndex].value = value;
 
     return GameState(
       selectedIndex: -1,
       soundEnable: state.soundEnable,
-      board: state.board,
+      board: board,
       availableDestinations: [],
       messages: state.messages,
       unreadMessagesCount: state.unreadMessagesCount,

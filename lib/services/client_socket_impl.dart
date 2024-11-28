@@ -137,14 +137,12 @@ class SocketClientImpl implements ClientBase {
 
   @override
   void movement({
-    required int sourceIndex,
-    required int captureIndex,
+    required int value,
     required int destinationIndex,
   }) {
     _sendMessage(
       Dto.movement(
-        sourceIndex: sourceIndex,
-        captureIndex: captureIndex,
+        value: value,
         destinationIndex: destinationIndex,
       ),
     );

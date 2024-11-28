@@ -16,8 +16,7 @@ class Dto {
   final String enemy;
 
   // movement
-  final int sourceIndex;
-  final int captureIndex;
+  final int value;
   final int destinationIndex;
 
   // chat
@@ -31,8 +30,7 @@ class Dto {
     required this.ip,
     required this.port,
     required this.enemy,
-    required this.sourceIndex,
-    required this.captureIndex,
+    required this.value,
     required this.destinationIndex,
     required this.message,
   });
@@ -53,8 +51,7 @@ class Dto {
       ip: ip,
       port: port,
       enemy: enemy,
-      sourceIndex: -1,
-      captureIndex: -1,
+      value: -1,
       destinationIndex: -1,
       message: '',
     );
@@ -69,16 +66,14 @@ class Dto {
       ip: '',
       port: -1,
       enemy: '',
-      sourceIndex: -1,
-      captureIndex: -1,
+      value: -1,
       destinationIndex: -1,
       message: message,
     );
   }
 
   factory Dto.movement({
-    required int sourceIndex,
-    required int captureIndex,
+    required int value,
     required int destinationIndex,
   }) {
     return Dto(
@@ -89,8 +84,7 @@ class Dto {
       ip: '',
       port: -1,
       enemy: '',
-      sourceIndex: sourceIndex,
-      captureIndex: captureIndex,
+      value: value,
       destinationIndex: destinationIndex,
       message: '',
     );
@@ -105,8 +99,7 @@ class Dto {
       ip: '',
       port: -1,
       enemy: '',
-      sourceIndex: -1,
-      captureIndex: -1,
+      value: -1,
       destinationIndex: -1,
       message: '',
     );
@@ -121,8 +114,7 @@ class Dto {
       ip: '',
       port: -1,
       enemy: '',
-      sourceIndex: -1,
-      captureIndex: -1,
+      value: -1,
       destinationIndex: -1,
       message: '',
     );
@@ -137,8 +129,7 @@ class Dto {
       'ip': ip,
       'port': port,
       'enemy': enemy,
-      'sourceIndex': sourceIndex,
-      'captureIndex': captureIndex,
+      'value': value,
       'destinationIndex': destinationIndex,
       'message': message,
     };
@@ -153,8 +144,7 @@ class Dto {
       ip: map['ip'] as String,
       port: map['port'] as int,
       enemy: map['enemy'] as String,
-      sourceIndex: map['sourceIndex'] as int,
-      captureIndex: map['captureIndex'] as int,
+      value: map['value'] as int,
       destinationIndex: map['destinationIndex'] as int,
       message: map['message'] as String,
     );
