@@ -117,6 +117,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     List<CellModel> board = state.board;
     board[destinationIndex].value = value;
 
+    board = updateBoardAfterMove(destinationIndex, value, board);
+
     return GameState(
       selectedIndex: -1,
       soundEnable: state.soundEnable,
