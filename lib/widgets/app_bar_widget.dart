@@ -35,7 +35,7 @@ AppBar appBarWidget({
                     child: Text(
                       state.firstPlayer,
                       textAlign: TextAlign.right,
-                      style: playerNameTextStyle,
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ),
                   Padding(
@@ -51,7 +51,7 @@ AppBar appBarWidget({
                   Expanded(
                     child: Text(
                       state.secondPlayer,
-                      style: playerNameTextStyle,
+                      style: const TextStyle(fontSize: 16.0),
                     ),
                   ),
                 ],
