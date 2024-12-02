@@ -10,7 +10,6 @@ AppBar appBarWidget({
   required GameBloc bloc,
   required VoidCallback openChat,
 }) {
-  TextStyle? playerNameTextStyle;
   double? swordsImageSize;
   double swordsHorizontalPadding = 32.0;
 
