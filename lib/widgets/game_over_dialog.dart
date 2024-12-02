@@ -6,15 +6,26 @@ import 'elevated_button_widget.dart';
 AlertDialog gameOverDialog({
   required BuildContext context,
   required GameState state,
+  required int? winner,
 }) {
-  var gameOverMessage = 'Você ganhou!';
+  late String gameOverMessage;
 
-  if (state.whiteFlag == true) {
-    gameOverMessage = 'Você ganhou por desistência!';
-  } else if (state.whiteFlag == false) {
-    gameOverMessage = 'Você perdeu por desistência!';
-  } else if (state.myTurn) {
-    gameOverMessage = 'Você perdeu!';
+  if (state.whiteFlag != null) {
+    if (state.whiteFlag == true) {
+      gameOverMessage = 'Você ganhou por desistência!';
+    } else {
+      gameOverMessage = 'Você perdeu por desistência!';
+    }
+  } else {
+    if (winner != null) {
+      if (winner == state.myValue) {
+        gameOverMessage = 'Parabéns! Você ganhou.';
+      } else {
+        gameOverMessage = 'Que triste! Você perdeu.';
+      }
+    } else {
+      gameOverMessage = 'Que interessante! Vocês empataram.';
+    }
   }
 
   return AlertDialog(

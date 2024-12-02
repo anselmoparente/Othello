@@ -150,6 +150,8 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _onGameOver(BuildContext context, GameState state) {
+    int? winner = getWinner(state.board);
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -158,6 +160,7 @@ class _GamePageState extends State<GamePage> {
         child: gameOverDialog(
           context: context,
           state: state,
+          winner: winner,
         ),
       ),
     );
