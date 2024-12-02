@@ -5,21 +5,14 @@ import 'data_type.dart';
 class Dto {
   final DataType type;
 
-  // start game command
   final bool start;
   final bool ack;
   final bool accept;
   final String ip;
   final int port;
-
-  // identification
   final String enemy;
-
-  // movement
   final int value;
   final int destinationIndex;
-
-  // chat
   final String message;
 
   Dto({

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:othello/utils/utils.dart';
 
 import '../models/cell_model.dart';
 import '../models/destination_model.dart';

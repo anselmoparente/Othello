@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/game_bloc.dart';
 import '../bloc/game_state.dart';
 import '../utils/constants.dart';
-import '../utils/utils.dart';
 import 'open_chat_button_widget.dart';
 
 AppBar appBarWidget({
@@ -14,15 +13,6 @@ AppBar appBarWidget({
   TextStyle? playerNameTextStyle;
   double? swordsImageSize;
   double swordsHorizontalPadding = 32.0;
-
-  if (!isPlatformDesktop) {
-    playerNameTextStyle = const TextStyle(
-      fontWeight: FontWeight.w400,
-      fontSize: 14.0,
-    );
-    swordsImageSize = 16.0;
-    swordsHorizontalPadding = 8.0;
-  }
 
   return AppBar(
     toolbarHeight: 76.0,

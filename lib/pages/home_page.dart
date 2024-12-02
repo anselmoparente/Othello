@@ -96,23 +96,6 @@ class _HomePageState extends State<HomePage> {
                 constraints: BoxConstraints.loose(const Size.fromWidth(600.0)),
                 child: Builder(
                   builder: (context) {
-                    if (isPlatformDesktop) {
-                      return Row(
-                        children: [
-                          Expanded(child: ipTextField),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 16.0,
-                                right: 32.0,
-                              ),
-                              child: portTextField,
-                            ),
-                          ),
-                          playButton,
-                        ],
-                      );
-                    }
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -190,23 +189,20 @@ class _GamePageState extends State<GamePage> {
 
   void _openChat() {
     _bloc.add(OpenChatEvent());
-    if (isPlatformDesktop) {
-      _scaffoldKey.currentState?.openDrawer();
-    } else {
-      _isChatOpen = true;
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ChatWidget(
-            bloc: _bloc,
-            controller: _chatInputController,
-            closeChat: () {
-              _isChatOpen = false;
-              Navigator.of(context).pop();
-            },
-          ),
+
+    _isChatOpen = true;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChatWidget(
+          bloc: _bloc,
+          controller: _chatInputController,
+          closeChat: () {
+            _isChatOpen = false;
+            Navigator.of(context).pop();
+          },
         ),
-      );
-    }
+      ),
+    );
   }
 
   void _newGame() => _client.startGame();
