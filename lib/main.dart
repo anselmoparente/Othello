@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/client_base.dart';
 import 'pages/initial_page.dart';
-import 'services/client_socket_impl.dart';
+import 'services/rpc/grpc_client.dart';
+import 'services/socket/client_socket.dart';
 import 'utils/constants.dart';
 
 void main(List<String> args) async {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<ClientBase>(
-      create: (context) => SocketClientImpl(),
+      create: (context) => RpcClient(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

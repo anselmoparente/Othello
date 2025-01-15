@@ -1,15 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
+import 'package:grpc/grpc.dart';
 import 'package:network_info_plus/network_info_plus.dart';
+import 'package:othello/core/client_base.dart';
+import 'package:othello/core/dto/dto.dart';
 
-import '../../core/client_base.dart';
-import '../../core/dto/dto.dart';
+import 'grpc/generated/grpc_service.pbgrpc.dart';
 
-class SocketClientImpl implements ClientBase {
+class RpcClient extends GrpcServiceBase implements ClientBase {
   @override
   late final String serverIp;
 
@@ -20,8 +20,8 @@ class SocketClientImpl implements ClientBase {
   late final String userName;
 
   late final StreamController<Dto> _dataStreamCotroller;
-  late final ServerSocket _server;
-  late Socket _socket;
+  late final Server _server;
+  late GrpcServiceClient _client;
 
   @override
   Stream<Dto> get dataStream => _dataStreamCotroller.stream;
@@ -31,14 +31,24 @@ class SocketClientImpl implements ClientBase {
     dynamic address = await NetworkInfo().getWifiIP();
     address ??= InternetAddress.anyIPv4;
 
-    _server = await ServerSocket.bind(address, 1024);
+    _server = Server.create(
+      services: [this],
+      codecRegistry: CodecRegistry(codecs: const [
+        GzipCodec(),
+        IdentityCodec(),
+      ]),
+    );
+
+    await _server.serve(address: address, port: 1024);
     _dataStreamCotroller = StreamController<Dto>.broadcast();
 
     this.userName = userName;
-    serverPort = _server.port;
-    serverIp = _server.address.address;
-
-    _server.listen((socket) => _onConnectionEstablished(socket, false));
+    serverPort = _server.port!;
+    if (address is String) {
+      serverIp = address;
+    } else if (address is InternetAddress) {
+      serverIp = address.address;
+    }
   }
 
   @override
@@ -48,32 +58,21 @@ class SocketClientImpl implements ClientBase {
     bool initGame = true,
     void Function(dynamic)? onError,
   }) {
-    Socket.connect(ip, port, timeout: const Duration(seconds: 10))
-        .then((socket) => _onConnectionEstablished(socket, initGame))
-        .catchError((e) => onError?.call(e));
-  }
+    try {
+      final channel = ClientChannel(
+        ip,
+        port: port,
+        options: const ChannelOptions(
+          credentials: ChannelCredentials.insecure(),
+        ),
+      );
 
-  void _onConnectionEstablished(Socket socket, bool initGame) {
-    _socket = socket;
-    _socket.encoding = utf8;
-    _socket.listen(
-      _onReceiveData,
-      cancelOnError: true,
-      onError: (_) => _onErrorOrDone(),
-      onDone: _onErrorOrDone,
-    );
+      _client = GrpcServiceClient(channel);
 
-    if (initGame) startGame();
-  }
+      if (initGame) startGame();
 
-  void _onReceiveData(Uint8List rawData) {
-    final json = utf8.decode(rawData);
-    final data = Dto.fromJson(json);
-    _dataStreamCotroller.add(data);
-  }
-
-  void _onErrorOrDone() {
-    _dataStreamCotroller.add(Dto.disconnectedPair());
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   @override
@@ -99,6 +98,7 @@ class SocketClientImpl implements ClientBase {
 
   @override
   void accept(Dto dto) {
+    connectToRemoteServer(dto.ip, dto.port, initGame: false);
     _sendMessage(
       Dto.start(
         start: !dto.start,
@@ -149,7 +149,21 @@ class SocketClientImpl implements ClientBase {
   }
 
   void _sendMessage(Dto dto) async {
-    await _socket.flush();
-    _socket.write(dto.toJson());
+    try {
+      await _client.runCommand(CommandMessage(command: dto.toJson()));
+    } catch (e) {
+      _dataStreamCotroller.add(Dto.disconnectedPair());
+    }
+  }
+
+  @override
+  Future<ResponseMessage> runCommand(
+    ServiceCall call,
+    CommandMessage request,
+  ) {
+    final data = Dto.fromJson(request.command);
+    _dataStreamCotroller.add(data);
+
+    return Future.value(ResponseMessage());
   }
 }
